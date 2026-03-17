@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pil-Art Pracownia Stolarska | Konstrukcje drewniane do ogrodu</title>
+    <meta name="description" content="Pil-Art Pracownia Stolarska - zadaszenia tarasów, domki narzędziowe, carporty, żaluzje tarasowe i stolarka ogrodowa na zamówienie.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --orange: #e8791a;
+            --orange-light: #f5923e;
+            --orange-dark: #c4650f;
+            --dark: #1a1a1a;
+            --dark-lighter: #2a2a2a;
+            --dark-card: #222222;
+            --gray: #b0b0b0;
+            --white: #ffffff;
+            --wood-light: #c4956a;
+            --wood-mid: #8b6340;
+            --wood-dark: #5a3a20;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--dark);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* Wood texture background */
+        .wood-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                linear-gradient(rgba(26,26,26,0.85), rgba(26,26,26,0.85)),
+                url('images/tlo-drewno.jpg') center/cover no-repeat fixed;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(26,26,26,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(232,121,26,0.2);
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--white);
+        }
+
+        .nav-logo-img {
+            width: 45px;
+            height: auto;
+        }
+
+        .nav-logo-text {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .nav-logo-text span {
+            color: var(--gray);
+            font-weight: 300;
+            font-size: 0.7rem;
+            display: block;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--orange);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--orange);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: var(--orange);
+            transition: all 0.3s;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 30px 80px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at center, rgba(232,121,26,0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-logo {
+            margin-bottom: 30px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .hero-logo-img {
+            width: 350px;
+            height: auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero h1 .orange {
+            color: var(--orange);
+        }
+
+        .hero .subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .hero .description {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.75);
+            max-width: 650px;
+            margin: 0 auto 50px;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.8s both;
+        }
+
+        .btn {
+            padding: 14px 36px;
+            border-radius: 4px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--orange);
+            color: var(--white);
+            border: 2px solid var(--orange);
+        }
+
+        .btn-primary:hover {
+            background: var(--orange-dark);
+            border-color: var(--orange-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(232,121,26,0.3);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--orange);
+            color: var(--orange);
+            transform: translateY(-2px);
+        }
+
+        /* Decorative line */
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: var(--orange);
+            margin: 0 auto 30px;
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 30px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .section-header p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Services / Oferta */
+        .services {
+            background: rgba(34,34,34,0.6);
+        }
+
+        .services-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background: var(--dark-card);
+            border: 1px solid rgba(232,121,26,0.1);
+            border-radius: 8px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--orange), var(--orange-light));
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(232,121,26,0.3);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .service-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .service-icon svg {
+            width: 50px;
+            height: 50px;
+            fill: var(--orange);
+        }
+
+        .service-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .service-card p {
+            color: var(--gray);
+            font-size: 0.85rem;
+            line-height: 1.7;
+        }
+
+        /* Gallery / Realizacje */
+        .gallery-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .gallery-item:hover {
+            border-color: var(--orange);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 30px 20px 20px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay span {
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        /* About / O nas */
+        .about {
+            background: rgba(34,34,34,0.6);
+        }
+
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-text {
+            font-size: 1.05rem;
+            line-height: 2;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 50px;
+        }
+
+        .about-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+        }
+
+        .about-feature {
+            text-align: center;
+        }
+
+        .about-feature .number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--orange);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .about-feature .label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Process / Jak pracujemy */
+        .process-steps {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            counter-reset: step;
+        }
+
+        .process-step {
+            text-align: center;
+            position: relative;
+            counter-increment: step;
+        }
+
+        .process-step::before {
+            content: counter(step);
+            display: flex;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid var(--orange);
+            color: var(--orange);
+            font-size: 1.3rem;
+            font-weight: 700;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .process-step h3 {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .process-step p {
+            font-size: 0.8rem;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        /* Contact / Kontakt */
+        .contact {
+            background: rgba(34,34,34,0.6);
+        }
+
+        .contact-grid {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+            background: var(--dark-card);
+            border-radius: 8px;
+            border: 1px solid rgba(232,121,26,0.1);
+            transition: all 0.3s;
+            text-decoration: none;
+            color: var(--white);
+        }
+
+        .contact-item:hover {
+            border-color: var(--orange);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            border-radius: 50%;
+            background: rgba(232,121,26,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--orange);
+        }
+
+        .contact-info h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .contact-info p {
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 30px;
+            text-align: center;
+            border-top: 1px solid rgba(232,121,26,0.15);
+        }
+
+        .footer-logo {
+            margin-bottom: 20px;
+        }
+
+        .footer-logo-img {
+            width: 120px;
+            height: auto;
+        }
+
+        footer p {
+            color: var(--gray);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+        }
+
+        footer .nip {
+            margin-top: 8px;
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.3);
+        }
+
+        footer .author {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(232,121,26,0.15);
+            font-size: 0.8rem;
+            color: var(--gray);
+            letter-spacing: 1px;
+        }
+
+        footer .author strong {
+            color: var(--orange);
+            font-weight: 600;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2rem;
+            color: var(--white);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: none;
+            font-family: inherit;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2rem;
+            color: var(--white);
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: rgba(232,121,26,0.2);
+            border-radius: 50%;
+            transition: background 0.3s;
+        }
+
+        .lightbox-nav:hover {
+            background: rgba(232,121,26,0.5);
+        }
+
+        .lightbox-prev {
+            left: 20px;
+        }
+
+        .lightbox-next {
+            right: 20px;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                background: rgba(26,26,26,0.98);
+                padding: 20px 30px;
+                gap: 20px;
+                border-bottom: 1px solid rgba(232,121,26,0.2);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+
+            .hero .subtitle {
+                font-size: 0.85rem;
+                letter-spacing: 3px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-logo-img {
+                width: 250px;
+            }
+
+            section {
+                padding: 70px 20px;
+            }
+
+            .section-header h2 {
+                font-size: 1.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .process-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wood-bg"></div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-logo">
+                <img src="images/logo.png" alt="Pil-Art Logo" class="nav-logo-img">
+                <div class="nav-logo-text">
+                    Pil-Art
+                    <span>Pracownia Stolarska</span>
+                </div>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Start</a></li>
+                <li><a href="#oferta">Oferta</a></li>
+                <li><a href="#realizacje">Realizacje</a></li>
+                <li><a href="#o-nas">O nas</a></li>
+                <li><a href="#kontakt">Kontakt</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-logo">
+                <img src="images/logo.png" alt="Pil-Art Logo" class="hero-logo-img">
+            </div>
+            <p class="description">
+                Specjalizujemy si&#281; w wykonywaniu solidnych i estetycznych konstrukcji drewnianych do ogrodu.
+                Zadaszenia taras&oacute;w, domki narz&#281;dziowe, carporty, ruchome &#380;aluzje tarasowe
+                oraz r&oacute;&#380;nego rodzaju stolarka ogrodowa na zam&oacute;wienie.
+            </p>
+            <div class="hero-cta">
+                <a href="#kontakt" class="btn btn-primary">Skontaktuj si&#281;</a>
+                <a href="#realizacje" class="btn btn-outline">Zobacz realizacje</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Oferta -->
+    <section class="services" id="oferta">
+        <div class="section-header fade-in">
+            <div class="divider"></div>
+            <h2>Nasza oferta</h2>
+            <p>Ka&#380;de zlecenie realizujemy indywidualnie &ndash; od doradztwa i projektu po wykonanie i monta&#380;</p>
+        </div>
+        <div class="services-grid">
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 52 L8 20 L32 8 L56 20 L56 52 L8 52Z" fill="none" stroke="currentColor" stroke-width="3"/>
+                        <line x1="32" y1="8" x2="32" y2="52" stroke="currentColor" stroke-width="2"/>
+                        <line x1="8" y1="20" x2="56" y2="20" stroke="currentColor" stroke-width="2"/>
+                        <rect x="20" y="34" width="10" height="18" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <rect x="38" y="34" width="10" height="10" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </div>
+                <h3>Domki narz&#281;dziowe</h3>
+                <p>Solidne i estetyczne domki ogrodowe, kt&oacute;re pomieszcz&#261; wszystkie narz&#281;dzia i sprz&#281;t ogrodowy.</p>
+            </div>
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 28 L32 12 L60 28" fill="none" stroke="currentColor" stroke-width="3"/>
+                        <line x1="10" y1="26" x2="10" y2="52" stroke="currentColor" stroke-width="3"/>
+                        <line x1="54" y1="26" x2="54" y2="52" stroke="currentColor" stroke-width="3"/>
+                        <line x1="6" y1="52" x2="58" y2="52" stroke="currentColor" stroke-width="2"/>
+                        <line x1="22" y1="22" x2="22" y2="52" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+                        <line x1="42" y1="22" x2="42" y2="52" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+                    </svg>
+                </div>
+                <h3>Zadaszenia taras&oacute;w</h3>
+                <p>Pergole i zadaszenia, kt&oacute;re chroni&#261; przed s&#322;o&#324;cem i deszczem, dodaj&#261;c elegancji tarasowi.</p>
+            </div>
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 24 L32 10 L60 24" fill="none" stroke="currentColor" stroke-width="3"/>
+                        <line x1="10" y1="22" x2="10" y2="54" stroke="currentColor" stroke-width="3"/>
+                        <line x1="54" y1="22" x2="54" y2="54" stroke="currentColor" stroke-width="3"/>
+                        <rect x="20" y="30" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <line x1="20" y1="36" x2="44" y2="36" stroke="currentColor" stroke-width="1.5"/>
+                        <line x1="20" y1="42" x2="44" y2="42" stroke="currentColor" stroke-width="1.5"/>
+                        <line x1="20" y1="48" x2="44" y2="48" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <h3>Carporty i drewutnie</h3>
+                <p>Wiaty gara&#380;owe oraz drewutnie &ndash; praktyczne konstrukcje zabezpieczaj&#261;ce samoch&oacute;d i drewno opa&#322;owe.</p>
+            </div>
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="10" width="44" height="44" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+                        <line x1="10" y1="18" x2="54" y2="18" stroke="currentColor" stroke-width="2"/>
+                        <line x1="10" y1="26" x2="54" y2="26" stroke="currentColor" stroke-width="2"/>
+                        <line x1="10" y1="34" x2="54" y2="34" stroke="currentColor" stroke-width="2"/>
+                        <line x1="10" y1="42" x2="54" y2="42" stroke="currentColor" stroke-width="2"/>
+                        <line x1="10" y1="50" x2="54" y2="50" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </div>
+                <h3>&#379;aluzje tarasowe</h3>
+                <p>Ruchome &#380;aluzje drewniane, kt&oacute;re reguluj&#261; dop&#322;yw &#347;wiat&#322;a i zapewniaj&#261; prywatno&#347;&#263;.</p>
+            </div>
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 52 L12 16 L28 16 L28 52" fill="none" stroke="currentColor" stroke-width="3"/>
+                        <path d="M36 52 L36 24 L52 24 L52 52" fill="none" stroke="currentColor" stroke-width="3"/>
+                        <line x1="6" y1="52" x2="58" y2="52" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="24" cy="36" r="2" fill="currentColor"/>
+                        <circle cx="48" cy="40" r="2" fill="currentColor"/>
+                        <path d="M20 10 L20 16" stroke="currentColor" stroke-width="2"/>
+                        <path d="M16 12 L24 12" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </div>
+                <h3>Stolarka ogrodowa</h3>
+                <p>Altany, ogrodzenia, meble ogrodowe i inne elementy drewniane &ndash; wszystko na indywidualne zam&oacute;wienie.</p>
+            </div>
+            <div class="service-card fade-in">
+                <div class="service-icon">
+                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="8" y="14" width="48" height="36" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+                        <line x1="32" y1="14" x2="32" y2="50" stroke="currentColor" stroke-width="2"/>
+                        <path d="M8 14 L32 50" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M32 14 L56 50" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M56 14 L32 50" stroke="currentColor" stroke-width="1.5"/>
+                        <path d="M32 14 L8 50" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <h3>Realizacje na wymiar</h3>
+                <p>Niestandardowe projekty dopasowane do Twoich potrzeb i wymiar&oacute;w dzia&#322;ki.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Realizacje -->
+    <section id="realizacje">
+        <div class="section-header fade-in">
+            <div class="divider"></div>
+            <h2>Nasze realizacje</h2>
+            <p>Ka&#380;dy projekt to unikalna realizacja dopasowana do potrzeb klienta</p>
+        </div>
+        <div class="gallery-grid">
+            <div class="gallery-item fade-in" onclick="openLightbox(0)">
+                <img src="images/realizacja-1.jpg" alt="Domek narzędziowy z drzwiami typu barn door" loading="lazy">
+                <div class="gallery-overlay"><span>Domek narzędziowy</span></div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(1)">
+                <img src="images/realizacja-2.jpg" alt="Drewutnia z dachem dwuspadowym" loading="lazy">
+                <div class="gallery-overlay"><span>Drewutnia</span></div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(2)">
+                <img src="images/realizacja-3.jpg" alt="Domek narzędziowy w kolorze grafitowym" loading="lazy">
+                <div class="gallery-overlay"><span>Domek narzędziowy</span></div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(3)">
+                <img src="images/realizacja-4.jpg" alt="Pergola z żaluzjami i domkiem narzędziowym" loading="lazy">
+                <div class="gallery-overlay"><span>Pergola z żaluzjami</span></div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(4)">
+                <img src="images/realizacja-5.jpg" alt="Żaluzje drewniane na elewacji" loading="lazy">
+                <div class="gallery-overlay"><span>Żaluzje drewniane</span></div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(5)">
+                <img src="images/realizacja-6.jpg" alt="Domek ogrodowy z dachem dwuspadowym" loading="lazy">
+                <div class="gallery-overlay"><span>Domek ogrodowy</span></div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(6)">
+                <img src="images/realizacja-7.jpg" alt="Żaluzje drewniane przy elewacji" loading="lazy">
+                <div class="gallery-overlay"><span>Żaluzje drewniane</span></div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(7)">
+                <img src="images/realizacja-8.jpg" alt="Zabudowa tarasu z żaluzjami" loading="lazy">
+                <div class="gallery-overlay"><span>Zabudowa tarasu</span></div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(8)">
+                <img src="images/realizacja-10.jpg" alt="Pergola tarasowa z żaluzjami ruchomymi" loading="lazy">
+                <div class="gallery-overlay"><span>Pergola z żaluzjami</span></div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(9)">
+                <img src="images/realizacja-11.jpg" alt="Domek narzędziowy w ogrodzie" loading="lazy">
+                <div class="gallery-overlay"><span>Domek narzędziowy</span></div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(10)">
+                <img src="images/realizacja-12.jpg" alt="Zadaszenie tarasu z żaluzjami" loading="lazy">
+                <div class="gallery-overlay"><span>Zadaszenie tarasu</span></div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(11)">
+                <img src="images/realizacja-13.jpg" alt="Ścianka żaluzjowa przy elewacji" loading="lazy">
+                <div class="gallery-overlay"><span>Ścianka żaluzjowa</span></div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(12)">
+                <img src="images/realizacja-14.jpg" alt="Pergola tarasowa z ruchomymi żaluzjami" loading="lazy">
+                <div class="gallery-overlay"><span>Pergola tarasowa</span></div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(13)">
+                <img src="images/realizacja-15.jpg" alt="Żaluzje drewniane wewnątrz zadaszenia" loading="lazy">
+                <div class="gallery-overlay"><span>Żaluzje wewnętrzne</span></div>
+            </div>
+            <div class="gallery-item fade-in" onclick="openLightbox(14)">
+                <img src="images/realizacja-16.jpg" alt="Zadaszenie tarasu z żaluzjami - widok z góry" loading="lazy">
+                <div class="gallery-overlay"><span>Zadaszenie tarasu</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- O nas -->
+    <section class="about" id="o-nas">
+        <div class="section-header fade-in">
+            <div class="divider"></div>
+            <h2>O nas</h2>
+        </div>
+        <div class="about-content fade-in">
+            <p class="about-text">
+                Pil-Art Pracownia Stolarska specjalizuje si&#281; w wykonywaniu solidnych i estetycznych konstrukcji drewnianych do ogrodu.
+                Oferujemy zadaszenia taras&oacute;w, domki narz&#281;dziowe, carporty oraz ruchome &#380;aluzje tarasowe,
+                a tak&#380;e r&oacute;&#380;nego rodzaju stolark&#281; ogrodow&#261; wykonywan&#261; na zam&oacute;wienie.
+                Nasze konstrukcje &#322;&#261;cz&#261; funkcjonalno&#347;&#263;, trwa&#322;o&#347;&#263; i naturalny wygl&#261;d drewna.
+                Ka&#380;de zlecenie realizujemy indywidualnie &ndash; od doradztwa i projektu po wykonanie i monta&#380;.
+                Stawiamy na dok&#322;adno&#347;&#263;, wysok&#261; jako&#347;&#263; materia&#322;&oacute;w oraz staranne wyko&#324;czenie.
+            </p>
+            <div class="about-features">
+                <div class="about-feature">
+                    <span class="number">100%</span>
+                    <span class="label">Indywidualne podej&#347;cie</span>
+                </div>
+                <div class="about-feature">
+                    <span class="number">A-Z</span>
+                    <span class="label">Od projektu do monta&#380;u</span>
+                </div>
+                <div class="about-feature">
+                    <span class="number">&#9733;</span>
+                    <span class="label">Najwy&#380;sza jako&#347;&#263;</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Jak pracujemy -->
+    <section id="proces">
+        <div class="section-header fade-in">
+            <div class="divider"></div>
+            <h2>Jak pracujemy</h2>
+            <p>Prosty i przejrzysty proces wsp&oacute;&#322;pracy</p>
+        </div>
+        <div class="process-steps">
+            <div class="process-step fade-in">
+                <h3>Kontakt i doradztwo</h3>
+                <p>Om&oacute;wimy Twoje potrzeby, wymiary i preferencje dotycz&#261;ce projektu.</p>
+            </div>
+            <div class="process-step fade-in">
+                <h3>Projekt</h3>
+                <p>Przygotujemy indywidualny projekt dostosowany do Twojej przestrzeni.</p>
+            </div>
+            <div class="process-step fade-in">
+                <h3>Wykonanie</h3>
+                <p>Precyzyjnie wykonamy konstrukcj&#281; z wyselekcjonowanych materia&#322;&oacute;w.</p>
+            </div>
+            <div class="process-step fade-in">
+                <h3>Monta&#380;</h3>
+                <p>Profesjonalnie zamontujemy gotow&#261; konstrukcj&#281; u Ciebie na miejscu.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kontakt -->
+    <section class="contact" id="kontakt">
+        <div class="section-header fade-in">
+            <div class="divider"></div>
+            <h2>Kontakt</h2>
+            <p>Szukasz sprawdzonej stolarki ogrodowej? Zapraszamy do kontaktu!</p>
+        </div>
+        <div class="contact-grid">
+            <a href="tel:+48533789001" class="contact-item fade-in">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                    </svg>
+                </div>
+                <div class="contact-info">
+                    <h3>Telefon</h3>
+                    <p>533 789 001</p>
+                </div>
+            </a>
+            <a href="mailto:pilartpracownia@gmail.com" class="contact-item fade-in">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                </div>
+                <div class="contact-info">
+                    <h3>E-mail</h3>
+                    <p>pilartpracownia@gmail.com</p>
+                </div>
+            </a>
+            <a href="https://www.facebook.com/profile.php?id=100064281422629" target="_blank" rel="noopener" class="contact-item fade-in">
+                <div class="contact-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                </div>
+                <div class="contact-info">
+                    <h3>Facebook</h3>
+                    <p>Pil-Art Pracownia Stolarska</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-logo">
+            <img src="images/logo.png" alt="Pil-Art Logo" class="footer-logo-img">
+        </div>
+        <p>&copy; 2026 Pil-Art Pracownia Stolarska. Wszelkie prawa zastrze&#380;one.</p>
+        <p class="nip">NIP: 751 122 62 81</p>
+        <p class="author">Projekt i wykonanie strony: <strong>Szymon Grahl</strong></p>
+    </footer>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">&#8249;</button>
+        <img id="lightboxImg" src="" alt="Realizacja Pil-Art">
+        <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">&#8250;</button>
+    </div>
+
+    <script>
+        // Navbar scroll
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Hamburger
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Lightbox
+        const galleryImages = [
+            'images/realizacja-1.jpg',
+            'images/realizacja-2.jpg',
+            'images/realizacja-3.jpg',
+            'images/realizacja-4.jpg',
+            'images/realizacja-5.jpg',
+            'images/realizacja-6.jpg',
+            'images/realizacja-7.jpg',
+            'images/realizacja-8.jpg',
+            'images/realizacja-10.jpg',
+            'images/realizacja-11.jpg',
+            'images/realizacja-12.jpg',
+            'images/realizacja-13.jpg',
+            'images/realizacja-14.jpg',
+            'images/realizacja-15.jpg',
+            'images/realizacja-16.jpg'
+        ];
+        let currentImage = 0;
+
+        function openLightbox(index) {
+            currentImage = index;
+            document.getElementById('lightboxImg').src = galleryImages[index];
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function navigateLightbox(dir) {
+            event.stopPropagation();
+            currentImage = (currentImage + dir + galleryImages.length) % galleryImages.length;
+            document.getElementById('lightboxImg').src = galleryImages[currentImage];
+        }
+
+        document.getElementById('lightbox').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeLightbox();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (!document.getElementById('lightbox').classList.contains('active')) return;
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft') navigateLightbox(-1);
+            if (e.key === 'ArrowRight') navigateLightbox(1);
+        });
+    </script>
+</body>
+</html>
