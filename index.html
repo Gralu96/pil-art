@@ -334,11 +334,11 @@
             background: var(--dark-card);
             border: 1px solid rgba(232,121,26,0.1);
             border-radius: 8px;
-            padding: 40px 30px;
             text-align: center;
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .service-card::before {
@@ -351,6 +351,7 @@
             background: linear-gradient(90deg, var(--orange), var(--orange-light));
             transform: scaleX(0);
             transition: transform 0.3s;
+            z-index: 2;
         }
 
         .service-card:hover {
@@ -363,32 +364,159 @@
             transform: scaleX(1);
         }
 
-        .service-icon {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .service-card:hover .service-img img {
+            transform: scale(1.05);
         }
 
-        .service-icon svg {
-            width: 50px;
-            height: 50px;
-            fill: var(--orange);
+        .service-img {
+            width: 100%;
+            aspect-ratio: 4/3;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .service-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .service-img-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            background: linear-gradient(transparent, rgba(0,0,0,0.6));
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+        }
+
+        .service-img-count {
+            background: rgba(232,121,26,0.85);
+            color: var(--white);
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .service-text {
+            padding: 25px 20px;
         }
 
         .service-card h3 {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             letter-spacing: 1px;
         }
 
         .service-card p {
             color: var(--gray);
-            font-size: 0.85rem;
-            line-height: 1.7;
+            font-size: 0.8rem;
+            line-height: 1.6;
+        }
+
+        /* Category Gallery Modal */
+        .category-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .category-modal.active {
+            display: block;
+        }
+
+        .category-modal-header {
+            position: sticky;
+            top: 0;
+            background: rgba(26,26,26,0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(232,121,26,0.2);
+            z-index: 10;
+        }
+
+        .category-modal-header h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .category-modal-header h2 span {
+            color: var(--orange);
+        }
+
+        .category-modal-close {
+            font-size: 2rem;
+            color: var(--white);
+            cursor: pointer;
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+        }
+
+        .category-modal-close:hover {
+            color: var(--orange);
+        }
+
+        .category-gallery {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .category-gallery-item {
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .category-gallery-item:hover {
+            border-color: var(--orange);
+        }
+
+        .category-gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .category-gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .category-gallery {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
         }
 
         /* Gallery / Realizacje */
@@ -852,90 +980,77 @@
             <p>Ka&#380;de zlecenie realizujemy indywidualnie &ndash; od doradztwa i projektu po wykonanie i monta&#380;</p>
         </div>
         <div class="services-grid">
-            <div class="service-card fade-in">
-                <div class="service-icon">
-                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8 52 L8 20 L32 8 L56 20 L56 52 L8 52Z" fill="none" stroke="currentColor" stroke-width="3"/>
-                        <line x1="32" y1="8" x2="32" y2="52" stroke="currentColor" stroke-width="2"/>
-                        <line x1="8" y1="20" x2="56" y2="20" stroke="currentColor" stroke-width="2"/>
-                        <rect x="20" y="34" width="10" height="18" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
-                        <rect x="38" y="34" width="10" height="10" rx="1" fill="none" stroke="currentColor" stroke-width="2"/>
-                    </svg>
+            <div class="service-card fade-in" onclick="openCategory('domki')">
+                <div class="service-img">
+                    <img src="images/realizacja-1.jpg" alt="Domki narzędziowe" loading="lazy">
+                    <div class="service-img-overlay">
+                        <span class="service-img-count">4 zdjęcia</span>
+                    </div>
                 </div>
-                <h3>Domki narz&#281;dziowe</h3>
-                <p>Solidne i estetyczne domki ogrodowe, kt&oacute;re pomieszcz&#261; wszystkie narz&#281;dzia i sprz&#281;t ogrodowy.</p>
+                <div class="service-text">
+                    <h3>Domki narz&#281;dziowe</h3>
+                    <p>Solidne i estetyczne domki ogrodowe, kt&oacute;re pomieszcz&#261; wszystkie narz&#281;dzia i sprz&#281;t ogrodowy.</p>
+                </div>
             </div>
-            <div class="service-card fade-in">
-                <div class="service-icon">
-                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 28 L32 12 L60 28" fill="none" stroke="currentColor" stroke-width="3"/>
-                        <line x1="10" y1="26" x2="10" y2="52" stroke="currentColor" stroke-width="3"/>
-                        <line x1="54" y1="26" x2="54" y2="52" stroke="currentColor" stroke-width="3"/>
-                        <line x1="6" y1="52" x2="58" y2="52" stroke="currentColor" stroke-width="2"/>
-                        <line x1="22" y1="22" x2="22" y2="52" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
-                        <line x1="42" y1="22" x2="42" y2="52" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
-                    </svg>
+            <div class="service-card fade-in" onclick="openCategory('zadaszenia')">
+                <div class="service-img">
+                    <img src="images/realizacja-12.jpg" alt="Zadaszenia tarasów" loading="lazy">
+                    <div class="service-img-overlay">
+                        <span class="service-img-count">4 zdjęcia</span>
+                    </div>
                 </div>
-                <h3>Zadaszenia taras&oacute;w</h3>
-                <p>Pergole i zadaszenia, kt&oacute;re chroni&#261; przed s&#322;o&#324;cem i deszczem, dodaj&#261;c elegancji tarasowi.</p>
+                <div class="service-text">
+                    <h3>Zadaszenia taras&oacute;w</h3>
+                    <p>Pergole i zadaszenia, kt&oacute;re chroni&#261; przed s&#322;o&#324;cem i deszczem, dodaj&#261;c elegancji tarasowi.</p>
+                </div>
             </div>
-            <div class="service-card fade-in">
-                <div class="service-icon">
-                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4 24 L32 10 L60 24" fill="none" stroke="currentColor" stroke-width="3"/>
-                        <line x1="10" y1="22" x2="10" y2="54" stroke="currentColor" stroke-width="3"/>
-                        <line x1="54" y1="22" x2="54" y2="54" stroke="currentColor" stroke-width="3"/>
-                        <rect x="20" y="30" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"/>
-                        <line x1="20" y1="36" x2="44" y2="36" stroke="currentColor" stroke-width="1.5"/>
-                        <line x1="20" y1="42" x2="44" y2="42" stroke="currentColor" stroke-width="1.5"/>
-                        <line x1="20" y1="48" x2="44" y2="48" stroke="currentColor" stroke-width="1.5"/>
-                    </svg>
+            <div class="service-card fade-in" onclick="openCategory('carporty')">
+                <div class="service-img">
+                    <img src="images/realizacja-2.jpg" alt="Carporty i drewutnie" loading="lazy">
+                    <div class="service-img-overlay">
+                        <span class="service-img-count">2 zdjęcia</span>
+                    </div>
                 </div>
-                <h3>Carporty i drewutnie</h3>
-                <p>Wiaty gara&#380;owe oraz drewutnie &ndash; praktyczne konstrukcje zabezpieczaj&#261;ce samoch&oacute;d i drewno opa&#322;owe.</p>
+                <div class="service-text">
+                    <h3>Carporty i drewutnie</h3>
+                    <p>Wiaty gara&#380;owe oraz drewutnie &ndash; praktyczne konstrukcje zabezpieczaj&#261;ce samoch&oacute;d i drewno opa&#322;owe.</p>
+                </div>
             </div>
-            <div class="service-card fade-in">
-                <div class="service-icon">
-                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="10" y="10" width="44" height="44" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
-                        <line x1="10" y1="18" x2="54" y2="18" stroke="currentColor" stroke-width="2"/>
-                        <line x1="10" y1="26" x2="54" y2="26" stroke="currentColor" stroke-width="2"/>
-                        <line x1="10" y1="34" x2="54" y2="34" stroke="currentColor" stroke-width="2"/>
-                        <line x1="10" y1="42" x2="54" y2="42" stroke="currentColor" stroke-width="2"/>
-                        <line x1="10" y1="50" x2="54" y2="50" stroke="currentColor" stroke-width="2"/>
-                    </svg>
+            <div class="service-card fade-in" onclick="openCategory('zaluzje')">
+                <div class="service-img">
+                    <img src="images/realizacja-5.jpg" alt="Żaluzje tarasowe" loading="lazy">
+                    <div class="service-img-overlay">
+                        <span class="service-img-count">7 zdjęć</span>
+                    </div>
                 </div>
-                <h3>&#379;aluzje tarasowe</h3>
-                <p>Ruchome &#380;aluzje drewniane, kt&oacute;re reguluj&#261; dop&#322;yw &#347;wiat&#322;a i zapewniaj&#261; prywatno&#347;&#263;.</p>
+                <div class="service-text">
+                    <h3>&#379;aluzje tarasowe</h3>
+                    <p>Ruchome &#380;aluzje drewniane, kt&oacute;re reguluj&#261; dop&#322;yw &#347;wiat&#322;a i zapewniaj&#261; prywatno&#347;&#263;.</p>
+                </div>
             </div>
-            <div class="service-card fade-in">
-                <div class="service-icon">
-                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 52 L12 16 L28 16 L28 52" fill="none" stroke="currentColor" stroke-width="3"/>
-                        <path d="M36 52 L36 24 L52 24 L52 52" fill="none" stroke="currentColor" stroke-width="3"/>
-                        <line x1="6" y1="52" x2="58" y2="52" stroke="currentColor" stroke-width="2"/>
-                        <circle cx="24" cy="36" r="2" fill="currentColor"/>
-                        <circle cx="48" cy="40" r="2" fill="currentColor"/>
-                        <path d="M20 10 L20 16" stroke="currentColor" stroke-width="2"/>
-                        <path d="M16 12 L24 12" stroke="currentColor" stroke-width="2"/>
-                    </svg>
+            <div class="service-card fade-in" onclick="openCategory('stolarka')">
+                <div class="service-img">
+                    <img src="images/realizacja-4.jpg" alt="Stolarka ogrodowa" loading="lazy">
+                    <div class="service-img-overlay">
+                        <span class="service-img-count">3 zdjęcia</span>
+                    </div>
                 </div>
-                <h3>Stolarka ogrodowa</h3>
-                <p>Altany, ogrodzenia, meble ogrodowe i inne elementy drewniane &ndash; wszystko na indywidualne zam&oacute;wienie.</p>
+                <div class="service-text">
+                    <h3>Stolarka ogrodowa</h3>
+                    <p>Altany, ogrodzenia, meble ogrodowe i inne elementy drewniane &ndash; wszystko na indywidualne zam&oacute;wienie.</p>
+                </div>
             </div>
-            <div class="service-card fade-in">
-                <div class="service-icon">
-                    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-                        <rect x="8" y="14" width="48" height="36" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
-                        <line x1="32" y1="14" x2="32" y2="50" stroke="currentColor" stroke-width="2"/>
-                        <path d="M8 14 L32 50" stroke="currentColor" stroke-width="1.5"/>
-                        <path d="M32 14 L56 50" stroke="currentColor" stroke-width="1.5"/>
-                        <path d="M56 14 L32 50" stroke="currentColor" stroke-width="1.5"/>
-                        <path d="M32 14 L8 50" stroke="currentColor" stroke-width="1.5"/>
-                    </svg>
+            <div class="service-card fade-in" onclick="openCategory('wszystkie')">
+                <div class="service-img">
+                    <img src="images/realizacja-6.jpg" alt="Realizacje na wymiar" loading="lazy">
+                    <div class="service-img-overlay">
+                        <span class="service-img-count">Wszystkie realizacje</span>
+                    </div>
                 </div>
-                <h3>Realizacje na wymiar</h3>
-                <p>Niestandardowe projekty dopasowane do Twoich potrzeb i wymiar&oacute;w dzia&#322;ki.</p>
+                <div class="service-text">
+                    <h3>Realizacje na wymiar</h3>
+                    <p>Niestandardowe projekty dopasowane do Twoich potrzeb i wymiar&oacute;w dzia&#322;ki.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -1124,6 +1239,15 @@
         <p class="author">Projekt i wykonanie strony: <strong>Szymon Grahl</strong></p>
     </footer>
 
+    <!-- Category Gallery Modal -->
+    <div class="category-modal" id="categoryModal">
+        <div class="category-modal-header">
+            <h2><span id="categoryTitle"></span></h2>
+            <button class="category-modal-close" onclick="closeCategory()">&times;</button>
+        </div>
+        <div class="category-gallery" id="categoryGallery"></div>
+    </div>
+
     <!-- Lightbox -->
     <div class="lightbox" id="lightbox">
         <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
@@ -1208,11 +1332,86 @@
         });
 
         document.addEventListener('keydown', (e) => {
+            if (document.getElementById('categoryModal').classList.contains('active')) {
+                if (e.key === 'Escape') closeCategory();
+                return;
+            }
             if (!document.getElementById('lightbox').classList.contains('active')) return;
             if (e.key === 'Escape') closeLightbox();
             if (e.key === 'ArrowLeft') navigateLightbox(-1);
             if (e.key === 'ArrowRight') navigateLightbox(1);
         });
+
+        // Category galleries
+        const categories = {
+            domki: {
+                title: 'Domki narzędziowe',
+                images: ['images/realizacja-1.jpg', 'images/realizacja-3.jpg', 'images/realizacja-6.jpg', 'images/realizacja-11.jpg']
+            },
+            zadaszenia: {
+                title: 'Zadaszenia tarasów',
+                images: ['images/realizacja-12.jpg', 'images/realizacja-4.jpg', 'images/realizacja-16.jpg', 'images/realizacja-10.jpg']
+            },
+            carporty: {
+                title: 'Carporty i drewutnie',
+                images: ['images/realizacja-2.jpg', 'images/realizacja-6.jpg']
+            },
+            zaluzje: {
+                title: 'Żaluzje tarasowe',
+                images: ['images/realizacja-5.jpg', 'images/realizacja-7.jpg', 'images/realizacja-8.jpg', 'images/realizacja-10.jpg', 'images/realizacja-13.jpg', 'images/realizacja-14.jpg', 'images/realizacja-15.jpg']
+            },
+            stolarka: {
+                title: 'Stolarka ogrodowa',
+                images: ['images/realizacja-4.jpg', 'images/realizacja-8.jpg', 'images/realizacja-16.jpg']
+            },
+            wszystkie: {
+                title: 'Wszystkie realizacje',
+                images: galleryImages
+            }
+        };
+
+        let categoryLightboxImages = [];
+
+        function openCategory(key) {
+            const cat = categories[key];
+            document.getElementById('categoryTitle').textContent = cat.title;
+            const gallery = document.getElementById('categoryGallery');
+            categoryLightboxImages = cat.images;
+            gallery.innerHTML = cat.images.map((img, i) =>
+                `<div class="category-gallery-item" onclick="openCategoryLightbox(${i})">
+                    <img src="${img}" alt="${cat.title}" loading="lazy">
+                </div>`
+            ).join('');
+            document.getElementById('categoryModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCategory() {
+            document.getElementById('categoryModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function openCategoryLightbox(index) {
+            currentImage = index;
+            // Temporarily swap gallery images for lightbox navigation
+            window._origGalleryImages = galleryImages.slice();
+            galleryImages.length = 0;
+            categoryLightboxImages.forEach(img => galleryImages.push(img));
+            document.getElementById('lightboxImg').src = galleryImages[index];
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        // Override closeLightbox to restore original gallery
+        const _origCloseLightbox = closeLightbox;
+        closeLightbox = function() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = document.getElementById('categoryModal').classList.contains('active') ? 'hidden' : '';
+            if (window._origGalleryImages) {
+                galleryImages.length = 0;
+                window._origGalleryImages.forEach(img => galleryImages.push(img));
+                delete window._origGalleryImages;
+            }
+        };
     </script>
 </body>
 </html>
